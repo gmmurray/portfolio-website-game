@@ -1,11 +1,9 @@
 import GameLoading from '../components/GameLoading';
 import { GetStaticProps } from 'next';
 import { IPortfolioContent } from '../types/portfolioContent';
-import Link from 'next/link';
 import { PORTFOLIO_URL } from '../constants/urls';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
-import { mockGetPortfolioContent } from '../mock';
 const GameApp = dynamic(() => import('../components/GameApp'), {
   ssr: false,
   loading: () => <GameLoading />,
