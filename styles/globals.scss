@@ -1,0 +1,667 @@
+@charset "utf-8";
+@import 'config';
+@import 'minireset';
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+html {
+  scroll-behavior: smooth;
+  font-family: monospace;
+}
+
+html {
+  overflow-y: auto;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: $theme-dark-yellow;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.5;
+  background-color: $theme-dark-blue;
+}
+
+.credits-page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  &-container {
+    width: 50%;
+    max-width: 80%;
+  }
+
+  &-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: xx-large;
+    color: $theme-yellow;
+  }
+
+  h2 {
+    font-size: x-large;
+    color: $theme-yellow;
+    text-decoration: underline;
+    margin: 1rem 0;
+  }
+
+  a {
+    color: $theme-dark-yellow;
+
+    &:hover {
+      color: $theme-yellow;
+    }
+  }
+
+  &__item {
+    margin: 0.5rem 0;
+  }
+}
+
+.game-fallback {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  div {
+    width: 30%;
+  }
+}
+
+.game-page {
+  width: 100vw;
+  height: 100vh;
+
+  .game-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__back-button {
+    background-color: $theme-yellow;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.5rem;
+    text-align: center;
+    opacity: 0.8;
+
+    a {
+      font-size: large;
+      color: $theme-dark-blue;
+    }
+  }
+
+  &__container {
+    @media screen and (max-width: 859px), (max-height: 859px) {
+      display: none;
+    }
+  }
+
+  &__small-viewport {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    div {
+      text-align: center;
+      max-width: 50%;
+    }
+
+    @media screen and (min-width: 860px) and (min-height: 860px) {
+      display: none;
+    }
+
+    a {
+      color: $theme-yellow;
+    }
+  }
+}
+
+.game-overlay {
+  font-family: monospace;
+  transition: fade all 5s;
+
+  &.game-overlay-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+
+    .game-overlay-backdrop {
+      background-color: rgba(0, 0, 0, 0.65);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .game-overlay-message-container {
+        flex: 1;
+        display: flex;
+        max-width: 80%;
+        min-height: 60%;
+        .game-overlay-message {
+          flex: 1;
+          background-color: (#{$theme-dark-blue}e6);
+          border: 2px solid $theme-yellow;
+          overflow: scroll;
+          overflow-wrap: break-word;
+          overflow-y: auto;
+          overflow-x: auto;
+          padding: 1rem;
+          display: flex;
+          flex-direction: column;
+
+          &-close-button-container {
+            display: flex;
+
+            .game-overlay-message-close-button {
+              background-color: transparent;
+              border: none;
+              margin-left: auto;
+              color: $theme-yellow;
+              cursor: pointer;
+
+              &:hover {
+                color: $theme-dark-yellow;
+              }
+            }
+          }
+
+          &-content-container {
+            color: white;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+
+            .game-overlay-message-component-container {
+              flex: 1;
+            }
+
+            .diploma-container {
+              text-align: center;
+              position: relative;
+              opacity: 0;
+              transition: all ease-in 1s;
+
+              &-visible {
+                opacity: 1;
+              }
+
+              .diploma-image {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                height: 90%;
+                max-height: 90%;
+              }
+
+              .diploma-content {
+                color: black;
+                font-family: 'Courier New', monospace;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: small;
+
+                &-school {
+                  font-weight: bolder;
+                  font-size: medium;
+                }
+              }
+            }
+
+            .talent-tree {
+              display: flex;
+
+              .talent-tree-container {
+                width: 100%;
+                opacity: 0;
+                transition: opacity ease-in 1s;
+
+                &-visible {
+                  opacity: 1;
+                }
+
+                .talent-tree-row {
+                  display: flex;
+                  margin-bottom: 5rem;
+
+                  &-node {
+                    margin-left: auto;
+                    margin-right: auto;
+                    font-size: 2rem;
+                    color: $theme-dark-yellow;
+                    border: 0.25rem solid $theme-dark-yellow;
+                    width: 5rem;
+                    height: 5rem;
+                    text-align: center;
+                    transition: all ease 250ms;
+                    cursor: pointer;
+
+                    &:hover,
+                    &-selected {
+                      border-color: $theme-yellow;
+                      color: $theme-yellow;
+                    }
+
+                    &-active {
+                      color: $theme-light-grey;
+                      border-color: $theme-light-grey;
+
+                      &:hover {
+                        border-color: $theme-white;
+                        color: $theme-white;
+                      }
+
+                      &-selected {
+                        border-color: $theme-white;
+                        color: $theme-white;
+                      }
+                    }
+
+                    .talent-tree-points {
+                      font-size: 1rem;
+                    }
+                  }
+                }
+
+                &-shifted {
+                  width: 60%;
+                }
+
+                .talent-tree-selector {
+                  display: flex;
+                  margin-bottom: 0.5rem;
+
+                  button {
+                    cursor: pointer;
+                    background-color: transparent;
+                    border: none;
+                    color: $theme-yellow;
+
+                    &:hover {
+                      color: $theme-dark-yellow;
+                    }
+
+                    &:focus {
+                      box-shadow: none;
+                    }
+
+                    &:disabled {
+                      color: grey;
+                      cursor: not-allowed;
+                    }
+                  }
+
+                  .talent-tree-selector-next {
+                    margin-left: auto;
+                  }
+                }
+              }
+
+              .talent-tree-info {
+                width: 40%;
+                margin-left: 1rem;
+                border-left: 2px solid $theme-light-grey;
+                padding: 1rem;
+                opacity: 0;
+                transition: opacity ease-in 500ms;
+
+                &-visible {
+                  opacity: 1;
+                }
+
+                &-header {
+                  display: flex;
+
+                  &-title {
+                    font-weight: bold;
+                  }
+
+                  &-points {
+                    margin-left: auto;
+                  }
+                }
+
+                &-content {
+                  font-size: 0.8rem;
+                }
+              }
+            }
+
+            .simple-text-container {
+              opacity: 0;
+              transition: all ease-in 1s;
+              display: flex;
+
+              &-visible {
+                opacity: 1;
+              }
+
+              .simple-text-content {
+                margin: auto;
+                padding: 1rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.quest-log {
+  &-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .quest-log-header {
+      border: 1px solid $theme-dark-yellow;
+      margin-bottom: 4px;
+      display: flex;
+      text-align: center;
+
+      &-item {
+        margin-left: auto;
+        margin-right: auto;
+        flex: 1;
+        cursor: pointer;
+
+        &-active {
+          background-color: $theme-yellow;
+          transition: 1s;
+        }
+      }
+    }
+
+    .quest-log-pane-container {
+      display: flex;
+      flex: 1;
+      margin-top: 4px;
+
+      .quest-log-list {
+        width: 30%;
+        border: 1px solid $theme-dark-yellow;
+        margin-right: 4px;
+
+        &-item {
+          cursor: pointer;
+          padding: 0.5rem;
+          &-active {
+            background-color: $theme-dark-yellow;
+            transition: 1s;
+          }
+        }
+      }
+
+      .quest-log-detail {
+        width: 70%;
+        border: 1px solid $theme-dark-yellow;
+        margin-left: 4px;
+        display: flex;
+
+        &-item {
+          padding: 0.5rem;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+
+          h1 {
+            font-weight: bold;
+            font-size: xx-large;
+            margin-top: 1rem;
+          }
+
+          &-subtitle {
+            font-style: italic;
+          }
+
+          &-employer {
+            font-weight: bold;
+          }
+
+          &-objectives-container {
+            margin-top: 1rem;
+            &-title {
+              font-weight: bold;
+              font-size: x-large;
+            }
+            &-items {
+              list-style: disc;
+              list-style-position: inside;
+              text-indent: -20px;
+              margin-left: 20px;
+            }
+          }
+
+          &-rewards-container {
+            margin-top: auto;
+            margin-bottom: 2rem;
+            &-title {
+              font-weight: bold;
+              font-size: large;
+            }
+          }
+
+          &-divider {
+            margin-top: 0;
+          }
+        }
+
+        &-empty {
+          flex: 1;
+          text-align: center;
+          margin-top: auto;
+          margin-bottom: auto;
+
+          h1 {
+            font-weight: bold;
+            font-size: larger;
+          }
+        }
+      }
+    }
+  }
+}
+
+$item-dimension: 5rem;
+$epic-item: #9400d3;
+$rare-item: #0000cd;
+
+.inventory {
+  &-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+
+    &-inner {
+      background-color: $theme-dark-yellow;
+      padding: 2rem;
+      padding-top: 1rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+  }
+
+  &-items-container {
+    background-color: $theme-dark-yellow;
+    display: grid;
+    grid-template-columns: repeat(5, $item-dimension);
+    gap: 1rem;
+  }
+
+  &-item {
+    width: $item-dimension;
+    height: $item-dimension;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $theme-dark-grey;
+
+    &-epic {
+      border: 0.25rem solid $epic-item;
+    }
+
+    &-rare {
+      border: 0.25rem solid $rare-item;
+    }
+
+    &-occupied {
+      cursor: pointer;
+    }
+
+    .icon {
+      font-size: 3rem;
+    }
+
+    &-tooltip {
+      &-children {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &-container {
+        position: absolute;
+        margin-left: calc($item-dimension * 2);
+        margin-bottom: $item-dimension;
+        background-color: $theme-dark-blue;
+        padding: 0.5rem;
+        border: 1px solid $theme-yellow;
+        max-width: calc($item-dimension * 3);
+        font-size: small;
+      }
+    }
+
+    &-display {
+      &-container {
+        position: absolute;
+        padding: 1rem;
+        background-color: $theme-dark-blue;
+        border: 1px solid $theme-yellow;
+        margin: 1rem;
+        top: 0;
+        left: 0;
+        max-width: calc($item-dimension * 6);
+        cursor: auto;
+        text-align: left;
+
+        .epic-item {
+          color: $epic-item;
+        }
+
+        .rare-item {
+          color: $rare-item;
+        }
+      }
+
+      &-title {
+        &-container {
+          display: flex;
+          flex-direction: row;
+        }
+
+        &-text {
+          font-weight: bold;
+        }
+
+        &-button {
+          margin-left: auto;
+          font-size: small !important;
+          cursor: pointer;
+        }
+      }
+
+      &-content {
+        font-size: small;
+
+        a {
+          color: $theme-yellow;
+        }
+      }
+
+      &-tags {
+        display: grid;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}
+
+@import 'sweetalert2/src/variables.scss';
+
+.swal2-popup {
+  border: 1px solid $theme-yellow !important;
+  border-radius: 0 !important;
+  background-color: $theme-dark-blue !important;
+  font-family: monospace !important;
+  color: $theme-yellow !important;
+
+  .swal2-confirm {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background-color: $theme-yellow !important;
+    color: $theme-dark-blue !important;
+
+    &:focus {
+      box-shadow: 0 0 0 0.125em rgb(235 170 2 / 25%) !important;
+    }
+
+    &:hover {
+      color: white !important;
+    }
+  }
+
+  .swal2-cancel {
+    border: 1px solid $theme-yellow !important;
+    border-radius: 0 !important;
+    background-color: $theme-dark-blue !important;
+    color: $theme-yellow !important;
+
+    &:focus {
+      box-shadow: 0 0 0 0.125em rgb(235 170 2 / 25%) !important;
+    }
+
+    &:hover {
+      color: white !important;
+    }
+  }
+}
+
+.game-loading {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    font-size: larger;
+    color: $theme-yellow;
+  }
+}
