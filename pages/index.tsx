@@ -2,8 +2,10 @@ import GameLoading from '../components/GameLoading';
 import { GetStaticProps } from 'next';
 import { IPortfolioContent } from '../types/portfolioContent';
 import { PORTFOLIO_URL } from '../constants/urls';
-import axios from 'axios';
+import { dataConverter } from '@components/data/dataConverter';
 import dynamic from 'next/dynamic';
+import { getCmsData } from '@components/data/cms/getCmsData';
+
 const GameApp = dynamic(() => import('../components/GameApp'), {
   ssr: false,
   loading: () => <GameLoading />,
@@ -45,24 +47,28 @@ export default function IndexPage({ content }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const url = process.env.PORTFOLIO_API_URL;
-  const apiKey = process.env.PORTFOLIO_API_KEY;
-  if (!url || !apiKey) {
-    throw new Error('invalid environment config');
-  }
+  const cmsData = await getCmsData();
 
-  const response = await axios.get<{
-    success: boolean;
-    data: IPortfolioContent;
-  }>(url, {
-    headers: {
-      'x-api-key': apiKey,
-    },
-  });
+  const converted = dataConverter(cmsData);
+
+  // const url = process.env.PORTFOLIO_API_URL;
+  // const apiKey = process.env.PORTFOLIO_API_KEY;
+  // if (!url || !apiKey) {
+  //   throw new Error('invalid environment config');
+  // }
+
+  // const response = await axios.get<{
+  //   success: boolean;
+  //   data: IPortfolioContent;
+  // }>(url, {
+  //   headers: {
+  //     'x-api-key': apiKey,
+  //   },
+  // });
 
   return {
     props: {
-      content: response.data.data,
+      content: converted,
     },
   };
 };
