@@ -46,5 +46,8 @@
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/uuid": "^9.0.1",
     "payload": "^3.35.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
