@@ -4,7 +4,7 @@ export interface IBaseContent {
   id: string;
   updatedAt: Date;
   createdAt: Date;
-  status: typeof baseContentStatusOptions[number]; // 'published' or 'draft'
+  status: (typeof baseContentStatusOptions)[number]; // 'published' or 'draft'
 }
 
 export interface IAboutContent extends IBaseContent {
@@ -31,7 +31,7 @@ export interface IExperienceContent extends IBaseContent {
   title: string;
   feats: string[];
   startDate: Date;
-  endDate?: Date;
+  endDate?: Date | null;
   isActive: boolean;
   dateString: string;
 }
