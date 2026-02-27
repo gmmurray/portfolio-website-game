@@ -44,20 +44,20 @@ function convertExperiences(
   const formatDate = (date: string) => dayjs(date).format('MMMM YYYY');
 
   return experiences.map(experience => {
-    const isActive = !experience.end;
-    const startString = formatDate(experience.start);
-    const endString = isActive ? 'Present' : formatDate(experience.end);
+    const isActive = !experience.endDate;
+    const startString = formatDate(experience.startDate);
+    const endString = isActive ? 'Present' : formatDate(experience.endDate!);
     return {
       id: experience.id.toString(),
-      status: experience.isPublished ? 'published' : 'draft',
+      status: 'published' as const,
       updatedAt: dayjs(experience.updatedAt).toISOString(),
       createdAt: dayjs(experience.createdAt).toISOString(),
       employer: experience.employer,
       title: experience.title,
-      feats: experience.feats.map(feat => feat.text),
-      startDate: dayjs(experience.start).toISOString(),
-      endDate: experience.end ? dayjs(experience.end).toISOString() : null,
-      isActive: !experience.end,
+      feats: experience.feats,
+      startDate: dayjs(experience.startDate).toISOString(),
+      endDate: experience.endDate ? dayjs(experience.endDate).toISOString() : null,
+      isActive,
       dateString: `${startString} - ${endString}`,
     };
   });
@@ -78,14 +78,14 @@ function convertProjects(projects: CmsData['projects']): {
       updatedAt: dayjs(p.updatedAt).toISOString(),
       createdAt: dayjs(p.createdAt).toISOString(),
       status: p.isPublished ? 'published' : ('draft' as IBaseContent['status']),
-      title: p.title,
+      title: p.name,
       content: p.description,
-      tags: p.tags?.map(t => t.text) ?? [],
+      tags: p.tags,
       iconName: icons[idx].icon,
       iconColor: icons[idx].color,
     };
 
-    if (p.type === 'highlight') {
+    if (p.isFavorite) {
       const featured: Serializable<IFeaturedContent> = {
         ...base,
         titleUrl: '',
@@ -93,7 +93,7 @@ function convertProjects(projects: CmsData['projects']): {
       };
 
       featuredItems.push(featured);
-    } else if (p.type === 'other') {
+    } else {
       const other: Serializable<IOtherContent> = {
         ...base,
         repositoryUrl: '',

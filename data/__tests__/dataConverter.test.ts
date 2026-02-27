@@ -92,8 +92,8 @@ describe('dataConverter', () => {
   describe('experience conversion', () => {
     it('converts a completed experience with correct date formatting', () => {
       const exp = makeCmsExperience({
-        start: '2022-03-01',
-        end: '2024-01-15',
+        startDate: '2022-03-01',
+        endDate: '2024-01-15',
       });
       const result = dataConverter(makeCmsData({ experiences: [exp] }));
       const converted = result.experience[0];
@@ -115,12 +115,9 @@ describe('dataConverter', () => {
       expect(converted.endDate).toBeNull();
     });
 
-    it('maps feats text correctly', () => {
+    it('passes feats through directly', () => {
       const exp = makeCmsExperience({
-        feats: [
-          { id: 'f1', text: 'First feat' },
-          { id: 'f2', text: 'Second feat' },
-        ],
+        feats: ['First feat', 'Second feat'],
       });
       const result = dataConverter(makeCmsData({ experiences: [exp] }));
 
@@ -131,21 +128,19 @@ describe('dataConverter', () => {
     });
 
     it('preserves id as string', () => {
-      const exp = makeCmsExperience({ id: 42 });
+      const exp = makeCmsExperience({ id: '42' });
       const result = dataConverter(makeCmsData({ experiences: [exp] }));
 
       expect(result.experience[0].id).toBe('42');
     });
 
-    it('sets status based on isPublished flag', () => {
-      const published = makeCmsExperience({ isPublished: true });
-      const draft = makeCmsExperience({ id: 99, isPublished: false });
+    it('always sets status to published', () => {
       const result = dataConverter(
-        makeCmsData({ experiences: [published, draft] }),
+        makeCmsData({ experiences: [makeCmsExperience(), makeActiveCmsExperience()] }),
       );
 
       expect(result.experience[0].status).toBe('published');
-      expect(result.experience[1].status).toBe('draft');
+      expect(result.experience[1].status).toBe('published');
     });
 
     it('handles empty experiences array', () => {
@@ -156,7 +151,7 @@ describe('dataConverter', () => {
   });
 
   describe('project conversion', () => {
-    it('splits projects by type into featured and other', () => {
+    it('splits projects by isFavorite into featured and other', () => {
       const result = dataConverter(makeCmsData());
 
       expect(result.featured.length).toBe(1);
@@ -174,7 +169,7 @@ describe('dataConverter', () => {
       expect(result.other[0].iconColor).toBe('#6a89cc');
     });
 
-    it('maps tags text, falling back to empty array when undefined', () => {
+    it('passes tags through directly', () => {
       const withTags = makeFeaturedCmsProject();
       const withoutTags = makeTaglessCmsProject();
       const result = dataConverter(

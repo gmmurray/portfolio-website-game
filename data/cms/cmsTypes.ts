@@ -1,35 +1,49 @@
-import { PaginatedDocs, Sort, TypeWithTimestamps, Where } from 'payload';
+export type DbEntity<T> = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+} & T;
 
-export type PayloadApiSearchResponse<TData> = PaginatedDocs<TData>;
+export type AboutPage = DbEntity<{
+  intro: string;
+  gameAbout?: string;
+}>;
 
-export type PayloadDataType = TypeWithTimestamps;
-
-export type PayloadQuery = {
-  sort?: Sort;
-  limit?: number;
-  where?: Where;
-};
-
-export interface CmsExperience extends PayloadDataType {
+export type Experience = DbEntity<{
   title: string;
   employer: string;
-  start: string;
-  end: string;
-  feats: { id: string; text: string }[];
-  isPublished: boolean;
-}
+  startDate: string;
+  endDate?: string;
+  feats: string[];
+}>;
 
-export interface CmsProject extends PayloadDataType {
-  title: string;
+export type ListResponse<T> = {
+  data: T[];
+  total: number;
+};
+
+export type Project = DbEntity<{
+  name: string;
   description: string;
-  type: 'highlight' | 'other';
-  sourceUrl?: string;
-  siteUrl?: string;
-  tags?: { id: string; text: string }[];
+  sourceUrl: string | null;
+  siteUrl: string | null;
+  tags: string[];
+  isFavorite: boolean;
   isPublished: boolean;
-}
+  slug: string;
+}>;
+
+export type AboutPageContent = {
+  page: AboutPage;
+  experiences: ListResponse<Experience>;
+};
+
+export type ProjectsPageContent = {
+  projects: ListResponse<Project>;
+};
 
 export type CmsData = {
-  experiences: CmsExperience[];
-  projects: CmsProject[];
+  aboutDescription?: string;
+  experiences: Experience[];
+  projects: Project[];
 };
