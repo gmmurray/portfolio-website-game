@@ -26,7 +26,7 @@ export function dataConverter(
   const { featured, other } = convertProjects(cmsData.projects);
   return {
     about: {
-      description: ABOUT_DESCRIPTION,
+      description: cmsData.aboutDescription || ABOUT_DESCRIPTION,
       technologies: [],
       imageUrl: '',
       techTree: TECH_TREE,
